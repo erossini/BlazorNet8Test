@@ -1,0 +1,79 @@
+﻿@page "/post"
+@using Microsoft.AspNetCore.Authorization
+@attribute [RenderModeInteractiveAuto]
+
+@inject IJSRuntime js
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<LanguageSelect />
+
+<MarkdownEditor AutoSaveEnabled="true" AutoSaveId="UploadPage" @ref="@editor"
+                Value="@markdownValue" ValueChanged="@OnMarkdownValueChanged"
+                ValueHTMLChanged="@OnMarkdownValueHTMLChanged"
+                ImageUploadEndpoint="https://img.languageinuse.com/api/v1/upload"
+                ImageUploadAuthenticationSchema="Bearer"
+                ImageUploadAuthenticationToken="@token"
+                ImageUploadChanged="@OnImageUploadChanged"
+                ImageUploadStarted="@OnImageUploadStarted"
+                ImageUploadProgressed="@OnImageUploadProgressed"
+                ImageUploadEnded="@OnImageUploadEnded"
+                UploadImage="true" />
+
+<hr />
+
+<h3>Preview</h3>
+
+<div class="viewArticle">
+    @((MarkupString)markdownHtml)
+</div>
+
+@code {
+    #region Variables
+
+    /// <summary>
+    /// The Markdown editor
+    /// </summary>
+    private MarkdownEditor editor;
+
+    private string token = "";
+    private string markdownValue = "";
+    private string markdownHtml = "";
+
+    #endregion
+
+    private Task OnMarkdownValueChanged(string value)
+    {
+        markdownValue = value;
+        return Task.CompletedTask;
+    }
+
+    private async Task OnImageUploadChanged(FileChangedEventArgs e)
+    {
+        this.StateHasChanged();
+    }
+
+    private Task OnImageUploadStarted(FileStartedEventArgs e)
+    {
+        Console.WriteLine($"Started Image: {e.File.Name}");
+        return Task.CompletedTask;
+    }
+
+    private Task OnImageUploadProgressed(FileProgressedEventArgs e)
+    {
+        Console.WriteLine($"Image: {e.File.Name} Progress: {(int)e.Percentage}");
+        return Task.CompletedTask;
+    }
+
+    private Task OnImageUploadEnded(FileEndedEventArgs e)
+    {
+        Console.WriteLine($"Finished Image: {e.File.Name}, Success: {e.Success}");
+        return Task.CompletedTask;
+    }
+
+    private Task OnMarkdownValueHTMLChanged(string value)
+    {
+        markdownHtml = value;
+        return Task.CompletedTask;
+    }
+}

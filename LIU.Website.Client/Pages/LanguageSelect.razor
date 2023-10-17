@@ -1,0 +1,35 @@
+﻿<ImageSelect CssClass="@CSSClass" SelectedValueChanged="OnSelectedValueChange" Width="@Width">
+    @if(ShowEmptyOption) {
+        <Option Value="" DataTitle="@EmptyOptionText" Text="@EmptyOptionText" />
+    }
+    <Option Value="en" DataImageCss="flag gb" DataTitle="English" Text="English" />
+    <Option Value="es" DataImageCss="flag es" DataTitle="Spanish" Text="Spanish" />
+    <Option Value="pt" DataImageCss="flag pt" DataTitle="Portuguese" Text="Portuguese" />
+    <Option Value="de" DataImageCss="flag de" DataTitle="German" Text="German" />
+    <Option Value="fr" DataImageCss="flag fr" DataTitle="French" Text="French" />
+    <Option Value="it" DataImageCss="flag it" DataTitle="Italian" Text="Italian" />
+</ImageSelect>
+
+<p>
+    This is the value: @selValue
+</p>
+
+@code {
+    [Parameter] public string? CSSClass { get; set; }
+    [Parameter] public string Width { get; set; } = "200px";
+    [Parameter] public bool ShowEmptyOption { get; set; } = false;
+    [Parameter] public string EmptyOptionText { get; set; } = "All";
+
+    public string selValue;
+
+    //[Parameter] public EventCallback<SupportedLanguage?> SelectedValueChanged { get; set; }
+
+    public void OnSelectedValueChange(string selectedValue)
+    {
+        // if(string.IsNullOrEmpty(selectedValue))
+        //     SelectedValueChanged.InvokeAsync(null);
+        // else
+        //     SelectedValueChanged.InvokeAsync(selectedValue.GetSupportedLanguage());
+        selValue = selectedValue;
+    }
+}
